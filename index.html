@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Quoth the Giphy</title>
+    <title>Guoth the Quiffy</title>
 </head>
 <style type="text/css">
     form,
@@ -18,46 +18,32 @@
 </style>
 
 <body>
-
-    <button data-person="Arnold Schwarzenegger">
-        I'll be back</button>
-
-    <button data-person="Michael J Fox">
-        My happiness grows in direct proportionto my acceptance, and in inverse proportion to my expectations.</button>
-
-    <button data-person="Lucille Ball">
-        Love yourself first and everything else falls into line.</button>
-
-    <button data-person="Taylor Swift">
-        If you're horrible to me, I'm going to write a song about it, and you won't like it. That's how I operate.</button>
-
-    <button data-person="Samuel Jackson">
-        Far better is it to dare mighty things, to win glorious triumphs, even though checkered by failure... than to rank with those
-        poor spirits who neither enjoy nor suffer much, because they live in a gray twilight that knows not victory nor defeat.</button>
-
+    <!-- buttons go here -->
     <div id="buttons-view"></div>
 
-    <form id="movie-form">
-        <label for="movie-input">Add a Movie, Yo!</label>
-        <input type="text" id="movie-input">
+    <!-- input form here -->
+    <form id="form">
+        <label for="fav-input">Write a favorite thing!</label>
+        <input type="text" id="fav-input">
         <br>
 
-        <!-- Button triggers new movie to be added -->
-        <input id="add-movie" type="submit" value="Add a Movie, Yo!">
+        <!-- Button triggers new favorite to be added -->
+        <input id="add-fav" type="submit" value="Add a favorite thing!">
     </form>
 
-
+    <!-- gifs here -->
     <div id="gifs-appear-here">
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script type="text/javascript">
 
+        // when a button is clicked, display 10 gifs
         $(document).on("click", "button", function () {
-            var person = $(this).attr("data-person");
+            var favorite = $(this).attr("data-favorite");
 
             var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
-                person + "&api_key=1E62eHrzN7CrREzGzrRK2ztS2D92OUPC&limit=10";
+                favorite + "&api_key=1E62eHrzN7CrREzGzrRK2ztS2D92OUPC&limit=10";
 
             $.ajax({
                 url: queryURL,
@@ -76,18 +62,18 @@
 
                             var p = $("<p>").text("Rating: " + rating);
 
-                            var personImage = $("<img>");
+                            var favoriteImage = $("<img>");
 
-                            personImage.attr("src", results[i].images.fixed_height_still.url);
-                            personImage.attr("data-still", results[i].images.fixed_height_still.url);
-                            personImage.attr("data-animate", results[i].images.fixed_height.url);
-                            personImage.attr("data-state", "still");
-                            personImage.addClass("gif");
-                            console.log(personImage);
+                            favoriteImage.attr("src", results[i].images.fixed_height_still.url);
+                            favoriteImage.attr("data-still", results[i].images.fixed_height_still.url);
+                            favoriteImage.attr("data-animate", results[i].images.fixed_height.url);
+                            favoriteImage.attr("data-state", "still");
+                            favoriteImage.addClass("gif");
+                            console.log(favoriteImage);
 
 
                             gifDiv.append(p);
-                            gifDiv.append(personImage);
+                            gifDiv.append(favoriteImage);
 
 
                             $("#gifs-appear-here").prepend(gifDiv);
@@ -96,9 +82,8 @@
                 });
         });
 
-
+        // when a gif is clicked, it animates or goes back to still
         $(document).on("click", ".gif", function () {
-
             var state = $(this).attr("data-state");
 
             if (state === "still") {
@@ -110,37 +95,40 @@
             }
         });
 
-        var movies = [];
+        // initial buttons
+        var favs = ["Jurassic Park", "Scooby Doo", "Phineas and Ferb", "Bugs Bunny", "Alien", "Sharks", "Cheetahs", "Orcas",
+        ];
 
+        //writes and re-writes buttons
         function renderButtons() {
-
             $("#buttons-view").empty();
 
-            for (var i = 0; i < movies.length; i++) {
+            for (var i = 0; i < favs.length; i++) {
 
                 var a = $("<button>");
 
-                a.addClass("movie");
-                a.attr("data-person", movies[i]);
-                a.text(movies[i]);
+                a.addClass("fav");
+                a.attr("data-favorite", favs[i]);
+                a.text(favs[i]);
 
                 $("#buttons-view").append(a);
             }
         }
 
-
-        $("#add-movie").on("click", function (event) {
-
+        // adds buttons
+        $("#add-fav").on("click", function (event) {
             event.preventDefault();
 
-            var movie = $("#movie-input").val().trim();
+            var fav = $("#fav-input").val().trim();
 
-            movies.push(movie);
+            favs.push(fav);
+
+            $("#fav-input").val("");
 
             renderButtons();
         });
 
-
+        // Initialize buttons
         renderButtons();
 
 
